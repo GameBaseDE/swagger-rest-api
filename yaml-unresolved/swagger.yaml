@@ -7,9 +7,6 @@ info:
     email: gamebase@gahr.dev
     url: https://gahr.dev
 servers:
-# Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/humenius/GameBase-Comm-API/1.0.0
   - description: Dev Backend version of REST service
     url: https://backend.dev.gahr.dev/
   - description: Live Backend version of REST service
