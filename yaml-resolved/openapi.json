@@ -16,6 +16,12 @@
   "servers" : [ {
     "url" : "https://virtserver.swaggerhub.com/humenius/GameBase-Comm-API/1.0.0",
     "description" : "SwaggerHub API Auto Mocking"
+  }, {
+    "url" : "https://backend.dev.gahr.dev/",
+    "description" : "Dev Backend version of REST service"
+  }, {
+    "url" : "https://backend.gamebase.gahr.dev/",
+    "description" : "Live Backend version of REST service"
   } ],
   "tags" : [ {
     "name" : "api",
@@ -323,6 +329,41 @@
           }
         }
       }
+    },
+    "/api/listimages" : {
+      "get" : {
+        "tags" : [ "api" ],
+        "summary" : "Get a list of all available game server images",
+        "operationId" : "listImages",
+        "responses" : {
+          "200" : {
+            "description" : "Query successful",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/GameServerImages"
+                  }
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "Query failed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Exception"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components" : {
@@ -416,6 +457,18 @@
         }, {
           "type" : "object"
         } ]
+      },
+      "GameServerImages" : {
+        "type" : "object",
+        "properties" : {
+          "images" : {
+            "type" : "array",
+            "description" : "List of images",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
       }
     },
     "requestBodies" : {
