@@ -14,9 +14,6 @@
     "url" : "https://gahr.dev"
   },
   "servers" : [ {
-    "url" : "https://virtserver.swaggerhub.com/humenius/GameBase-Comm-API/1.0.0",
-    "description" : "SwaggerHub API Auto Mocking"
-  }, {
     "url" : "https://backend.dev.gahr.dev/",
     "description" : "Dev Backend version of REST service"
   }, {
