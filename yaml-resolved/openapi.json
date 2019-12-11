@@ -38,7 +38,7 @@
                 "schema" : {
                   "type" : "array",
                   "items" : {
-                    "$ref" : "#/components/schemas/GameServerStatus"
+                    "$ref" : "#/components/schemas/GameServerStatusArray"
                   }
                 }
               }
@@ -354,6 +354,12 @@
   },
   "components" : {
     "schemas" : {
+      "GameServerStatusArray" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/GameServerStatus"
+        }
+      },
       "Exception" : {
         "required" : [ "details", "exception", "id" ],
         "type" : "object",

@@ -33,7 +33,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GameServerStatus'
+                  $ref: '#/components/schemas/GameServerStatusArray'
         "404":
           description: Container not found
           content:
@@ -243,6 +243,10 @@ paths:
                   $ref: '#/components/schemas/Exception'
 components:
   schemas:
+    GameServerStatusArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/GameServerStatus'
     Exception:
       required:
       - details
