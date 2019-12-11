@@ -28,19 +28,8 @@
     "/api" : {
       "get" : {
         "tags" : [ "api" ],
-        "summary" : "Query status of a container",
+        "summary" : "Query status of all deployments",
         "operationId" : "getStatus",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "query",
-          "description" : "ID of the desired container",
-          "required" : true,
-          "style" : "form",
-          "explode" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
         "responses" : {
           "200" : {
             "description" : "Successful operation",
