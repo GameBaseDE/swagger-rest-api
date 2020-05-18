@@ -6,6 +6,9 @@ info:
   contact:
     email: gamebase@gahr.dev
     url: https://gahr.dev
+externalDocs:
+  description: Learn more about GameBase
+  url: https://blog.game-base.de
 servers:
   - description: Dev Backend version of REST service
     url: https://api.dev.game-base.de
