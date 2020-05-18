@@ -217,10 +217,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/Exception'
-          
-externalDocs:
-  description: Learn more about GameBase
-  url: https://gahr.dev
+
 components:
   schemas:
     GameServerStatusArray:
