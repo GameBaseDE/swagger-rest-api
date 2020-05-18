@@ -9,7 +9,7 @@ info:
   version: 1.0.1
 externalDocs:
   description: Learn more about GameBase
-  url: https://gahr.dev
+  url: https://blog.game-base.de
 servers:
 - url: https://api.dev.game-base.de
   description: Dev Backend version of REST service
