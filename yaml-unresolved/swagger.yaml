@@ -204,6 +204,15 @@ paths:
 
 components:
   schemas:
+    Status:
+      type: integer
+      enum: 
+        - unknown
+        - running
+        - restarting
+        - stopped
+        - error
+      default: unknown
     Exception:
       type: object
       required:
@@ -225,7 +234,7 @@ components:
         - id
         - gameTag
         - image
-        - state
+        - status
         - ports
       properties:
         id:
@@ -237,17 +246,10 @@ components:
         image:
           type: string
           description: Image used in Docker
-        state:
-          type: array
-          items:
-            type: string
-            enum: 
-              - running
-              - restarting
-              - stopped
-              - error
-              - unknown
-            default: unknown
+        status:
+          description: Status of container
+          oneOf:
+            - $ref: '#/components/schemas/Status'
         ports:
           type: array
           items:
