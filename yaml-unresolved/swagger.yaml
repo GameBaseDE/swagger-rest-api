@@ -205,14 +205,13 @@ paths:
 components:
   schemas:
     Status:
-      type: integer
-      enum: 
-        - unknown = 0
-        - running = 1
-        - stopped = 2
-        - restarting = 3
-        - error = 4
-      default: unknown
+      type: string
+      enum:
+      - UNKNOWN
+      - RUNNING
+      - STOPPED
+      - RESTARTING
+      - ERROR
     Exception:
       type: object
       required:
