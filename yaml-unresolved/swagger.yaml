@@ -1,21 +1,19 @@
 openapi: 3.0.0
 info:
-  description: >-
-    This is the REST API used as an communication layer between backend and
-    frontend.
-  version: 1.1.0
+  description: This is the REST API used as an communication layer between backend and frontend.
+  version: "1.1.0"
   title: GameBase Communication API
   contact:
     email: gamebase@gahr.dev
-    url: 'https://gahr.dev'
+    url: https://gahr.dev
 externalDocs:
   description: Learn more about GameBase
-  url: 'https://blog.game-base.de'
+  url: https://blog.game-base.de
 servers:
   - description: Dev Backend version of REST service
-    url: 'https://api.dev.game-base.de'
+    url: https://api.dev.game-base.de
   - description: Live Backend version of REST service
-    url: 'https://api.game-base.de/'
+    url: https://api.game-base.de/
 tags:
   - name: api
     description: REST API v1
@@ -35,12 +33,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GameServerStatus'
+
         '404':
           description: Containers' status could not be fetched
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+
   '/api/start/{id}':
     get:
       tags:
@@ -57,12 +57,14 @@ paths:
       responses:
         '200':
           description: Start successful
+
         '500':
           description: Start failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+
   '/api/stop/{id}':
     get:
       tags:
@@ -79,12 +81,14 @@ paths:
       responses:
         '200':
           description: Stop successful
+
         '500':
           description: Stop failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+
   '/api/restart/{id}':
     get:
       tags:
@@ -101,12 +105,14 @@ paths:
       responses:
         '200':
           description: Restart successful
+
         '500':
           description: Restart failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+
   /api/deploy:
     post:
       tags:
@@ -116,16 +122,19 @@ paths:
       responses:
         '201':
           description: Deployment successful
-        '400':
-          description: Invalid input
+
         '500':
           description: Deployment failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+
+        '400':
+          description: Invalid input
       requestBody:
         $ref: '#/components/requestBodies/GameServerDeployTemplate'
+
   /api/configure:
     post:
       tags:
@@ -135,16 +144,18 @@ paths:
       responses:
         '201':
           description: Configuration successful
-        '400':
-          description: Invalid input
+
         '500':
           description: Configuration failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+        '400':
+          description: Invalid input
       requestBody:
         $ref: '#/components/requestBodies/GameServerConfigurationTemplate'
+
   '/api/destroy/{id}':
     delete:
       tags:
@@ -161,12 +172,14 @@ paths:
       responses:
         '200':
           description: Deletion successful
+
         '500':
           description: Deletion failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+
   /api/listimages:
     get:
       tags:
@@ -181,12 +194,14 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/GameServerImages'
+
         '503':
           description: Query failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+
 components:
   schemas:
     Status:
@@ -297,9 +312,7 @@ components:
               description: UUID of owner whom this server belongs to
             description:
               type: string
-              description: >-
-                Short description of server which will be displayed on one's
-                Dashboard
+              description: Short description of server which will be displayed on one's Dashboard
         resources:
           type: object
           properties:
@@ -326,9 +339,7 @@ components:
               default: -1
             startupArgs:
               type: string
-              description: >-
-                Command with arguments that will be run upon container
-                creation/start
+              description: Command with arguments that will be run upon container creation/start
             restartBehavior:
               type: string
               enum:
