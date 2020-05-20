@@ -33,15 +33,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GameServerStatusArray'
+                  $ref: '#/components/schemas/GameServerStatus'
         "404":
-          description: Container not found
+          description: Containers' status could not be fetched
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
   /api/start/{id}:
     get:
       tags:
@@ -60,20 +58,12 @@ paths:
       responses:
         "200":
           description: Start successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Start failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
   /api/stop/{id}:
     get:
       tags:
@@ -92,20 +82,12 @@ paths:
       responses:
         "200":
           description: Stop successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Stop failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
   /api/restart/{id}:
     get:
       tags:
@@ -124,20 +106,12 @@ paths:
       responses:
         "200":
           description: Restart successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Restart failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
   /api/deploy:
     post:
       tags:
@@ -149,21 +123,13 @@ paths:
       responses:
         "201":
           description: Deployment successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Deployment failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
-        "405":
+                $ref: '#/components/schemas/Exception'
+        "400":
           description: Invalid input
   /api/configure:
     post:
@@ -176,21 +142,13 @@ paths:
       responses:
         "201":
           description: Configuration successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Configuration failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
-        "405":
+                $ref: '#/components/schemas/Exception'
+        "400":
           description: Invalid input
   /api/destroy/{id}:
     delete:
@@ -215,9 +173,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
   /api/listimages:
     get:
       tags:
@@ -238,20 +194,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
 components:
   schemas:
-    GameServerStatusArray:
-      type: array
-      items:
-        $ref: '#/components/schemas/GameServerStatus'
     Exception:
       required:
       - details
       - exception
-      - id
       type: object
       properties:
         id:
