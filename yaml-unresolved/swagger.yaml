@@ -289,6 +289,9 @@ components:
             type: string
     GameServerDeployTemplate:
       type: object
+      required:
+      - image
+      - ownerId
       properties:
         image:
           type: string
