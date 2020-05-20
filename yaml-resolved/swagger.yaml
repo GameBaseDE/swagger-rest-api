@@ -123,14 +123,14 @@ paths:
       responses:
         "201":
           description: Deployment successful
-        "400":
-          description: Invalid input
         "500":
           description: Deployment failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+        "400":
+          description: Invalid input
   /api/configure:
     post:
       tags:
@@ -142,14 +142,14 @@ paths:
       responses:
         "201":
           description: Configuration successful
-        "400":
-          description: Invalid input
         "500":
           description: Configuration failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+        "400":
+          description: Invalid input
   /api/destroy/{id}:
     delete:
       tags:
