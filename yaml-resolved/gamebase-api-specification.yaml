@@ -198,13 +198,13 @@ paths:
 components:
   schemas:
     Status:
-      type: object
+      type: integer
       enum:
-      - unknown
-      - running
-      - restarting
-      - stopped
-      - error
+      - null
+      - null
+      - null
+      - null
+      - null
     Exception:
       required:
       - details
