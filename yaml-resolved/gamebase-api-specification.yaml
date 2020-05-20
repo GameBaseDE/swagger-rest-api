@@ -197,6 +197,14 @@ paths:
                 $ref: '#/components/schemas/Exception'
 components:
   schemas:
+    Status:
+      type: integer
+      enum:
+      - null
+      - null
+      - null
+      - null
+      - null
     Exception:
       required:
       - details
@@ -218,7 +226,7 @@ components:
       - id
       - image
       - ports
-      - state
+      - status
       type: object
       properties:
         id:
@@ -230,17 +238,10 @@ components:
         image:
           type: string
           description: Image used in Docker
-        state:
-          type: array
-          items:
-            type: string
-            default: unknown
-            enum:
-            - running
-            - restarting
-            - stopped
-            - error
-            - unknown
+        status:
+          description: Status of container
+          oneOf:
+          - $ref: '#/components/schemas/Status'
         ports:
           type: array
           description: Ports used by game server
