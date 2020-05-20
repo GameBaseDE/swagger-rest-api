@@ -205,7 +205,7 @@ paths:
 components:
   schemas:
     Status:
-      type: integer
+      type: object
       enum: 
         - unknown
         - running
