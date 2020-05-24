@@ -6,14 +6,14 @@ info:
   contact:
     url: https://gahr.dev
     email: gamebase@gahr.dev
-  version: 1.0.0
+  version: 1.1.0
 externalDocs:
   description: Learn more about GameBase
-  url: https://gahr.dev
+  url: https://blog.game-base.de
 servers:
-- url: https://backend.dev.gahr.dev/
+- url: https://api.dev.game-base.de
   description: Dev Backend version of REST service
-- url: https://backend.gamebase.gahr.dev/
+- url: https://api.game-base.de/
   description: Live Backend version of REST service
 tags:
 - name: api
@@ -33,15 +33,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GameServerStatusArray'
+                  $ref: '#/components/schemas/GameServerStatus'
         "404":
-          description: Container not found
+          description: Containers' status could not be fetched
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
   /api/start/{id}:
     get:
       tags:
@@ -243,15 +241,18 @@ paths:
                   $ref: '#/components/schemas/Exception'
 components:
   schemas:
-    GameServerStatusArray:
-      type: array
-      items:
-        $ref: '#/components/schemas/GameServerStatus'
+    Status:
+      type: string
+      enum:
+      - UNKNOWN
+      - RUNNING
+      - STOPPED
+      - RESTARTING
+      - ERROR
     Exception:
       required:
       - details
       - exception
-      - id
       type: object
       properties:
         id:
@@ -269,7 +270,7 @@ components:
       - id
       - image
       - ports
-      - state
+      - status
       type: object
       properties:
         id:
@@ -281,17 +282,18 @@ components:
         image:
           type: string
           description: Image used in Docker
-        state:
+        status:
+          description: Status of container
           type: array
           items:
             type: string
             default: unknown
             enum:
-            - running
-            - restarting
-            - stopped
-            - error
-            - unknown
+              - running
+              - restarting
+              - stopped
+              - error
+              - unknown
         ports:
           type: array
           description: Ports used by game server
@@ -311,6 +313,9 @@ components:
           items:
             type: string
     GameServerDeployTemplate:
+      required:
+      - image
+      - ownerId
       type: object
       properties:
         image:
@@ -321,9 +326,15 @@ components:
           description: UUID of owner whom this server belongs to
           format: uuid
     GameServerConfigurationTemplate:
-      anyOf:
-      - $ref: '#/components/schemas/GameServerStatus'
-      - type: object
+      required:
+      - details
+      - resources.image
+      type: object
+      properties:
+        details:
+          $ref: '#/components/schemas/GameServerConfigurationTemplate_details'
+        resources:
+          $ref: '#/components/schemas/GameServerConfigurationTemplate_resources'
     GameServerImages:
       type: object
       properties:
@@ -332,6 +343,60 @@ components:
           description: List of images
           items:
             type: string
+    GameServerConfigurationTemplate_details:
+      type: object
+      properties:
+        serverName:
+          type: string
+          description: Name of server that will displayed on one's Dashboard
+        ownerId:
+          type: string
+          description: UUID of owner whom this server belongs to
+          format: uuid
+        description:
+          type: string
+          description: Short description of server which will be displayed on one's
+            Dashboard
+      description: General details of server
+    GameServerConfigurationTemplate_resources_ports:
+      type: object
+      properties:
+        tcp:
+          type: array
+          items:
+            type: integer
+            format: int16
+        udp:
+          type: array
+          items:
+            type: integer
+            format: int16
+      description: Ports to be allocated
+    GameServerConfigurationTemplate_resources:
+      type: object
+      properties:
+        image:
+          type: string
+          description: Docker image
+        ports:
+          $ref: '#/components/schemas/GameServerConfigurationTemplate_resources_ports'
+        memory:
+          type: integer
+          description: Memory to be allocated
+          default: -1
+        startupArgs:
+          type: string
+          description: Command with arguments that will be run upon container creation/start
+        restartBehavior:
+          type: array
+          items:
+            type: string
+            default: none
+            enum:
+            - none
+            - unless-stopped
+            - on-failure
+            - always
   requestBodies:
     GameServerDeployTemplate:
       description: Game server template which will be used for server creation
