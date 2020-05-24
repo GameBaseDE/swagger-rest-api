@@ -11,9 +11,9 @@ externalDocs:
   description: Learn more about GameBase
   url: https://blog.game-base.de
 servers:
-- url: https://api.dev.game-base.de
+- url: https://dev.game-base.de
   description: Dev Backend version of REST service
-- url: https://api.game-base.de/
+- url: https://game-base.de
   description: Live Backend version of REST service
 tags:
 - name: api
@@ -40,6 +40,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/start/{id}:
     get:
       tags:
@@ -64,6 +66,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/stop/{id}:
     get:
       tags:
@@ -88,6 +92,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/restart/{id}:
     get:
       tags:
@@ -112,6 +118,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/deploy:
     post:
       tags:
@@ -131,6 +139,8 @@ paths:
                 $ref: '#/components/schemas/Exception'
         "400":
           description: Invalid input
+      security:
+      - Bearer: []
   /api/configure:
     post:
       tags:
@@ -150,6 +160,8 @@ paths:
                 $ref: '#/components/schemas/Exception'
         "400":
           description: Invalid input
+      security:
+      - Bearer: []
   /api/destroy/{id}:
     delete:
       tags:
@@ -174,6 +186,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/listimages:
     get:
       tags:
@@ -195,10 +209,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
+  /api/auth/login:
+    post:
+      tags:
+      - api
+      summary: Login a user and return a JWT with the user object
+      requestBody:
+        $ref: '#/components/requestBodies/UserLogin'
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "403":
+          description: Login failed
+        "400":
+          description: Invalid input
 components:
   schemas:
     Status:
       type: string
+      default: UNKNOWN
       enum:
       - UNKNOWN
       - RUNNING
@@ -207,11 +242,40 @@ components:
       - ERROR
     RestartBehavior:
       type: string
+      default: none
       enum:
       - none
       - unless-stopped
       - on-failure
       - always
+    UserLogin:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email address of the user
+        password:
+          type: string
+          description: The password of the user
+    User:
+      required:
+      - email
+      - fullName
+      - token
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email address of the user
+        fullName:
+          type: string
+          description: The full name of the user
+        token:
+          type: string
+          description: The JWT of the users session
     Exception:
       required:
       - details
@@ -242,25 +306,29 @@ components:
         gameTag:
           type: string
           description: Indentifier of game
+        ownerId:
+          type: string
+          description: ID of server owner
+          format: uuid
         image:
           type: string
           description: Image used in Docker
-        status:
+        description:
           type: string
-          description: Status of container
-          default: none
-          enum:
-          - UNKNOWN
-          - RUNNING
-          - STOPPED
-          - RESTARTING
-          - ERROR
+          description: Description of server to be displayed on Dashboard
         ports:
-          type: array
-          description: Ports used by game server
-          items:
-            type: integer
-            format: int16
+          $ref: '#/components/schemas/GameServerStatus_ports'
+        memory:
+          type: integer
+          description: Amount of memory in MB to be allocated for the server
+        startupArgs:
+          type: string
+          description: Additional start up arguments that is appended or run on the
+            game server
+        restartBehavior:
+          $ref: '#/components/schemas/RestartBehavior'
+        status:
+          $ref: '#/components/schemas/Status'
         slots:
           type: integer
           description: Max. players allowed
@@ -304,6 +372,20 @@ components:
           description: List of images
           items:
             type: string
+    GameServerStatus_ports:
+      type: object
+      properties:
+        tcp:
+          type: array
+          items:
+            type: integer
+            format: int16
+        udp:
+          type: array
+          items:
+            type: integer
+            format: int16
+      description: Allocated ports for server
     GameServerConfigurationTemplate_details:
       type: object
       properties:
@@ -357,6 +439,11 @@ components:
           - on-failure
           - always
   requestBodies:
+    UserLogin:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserLogin'
     GameServerDeployTemplate:
       description: Game server template which will be used for server creation
       content:
@@ -371,3 +458,15 @@ components:
           schema:
             $ref: '#/components/schemas/GameServerConfigurationTemplate'
       required: true
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      description: |
+        For accessing the API a valid JWT token must be passed in all the queries in
+        the 'Authorization' header.
+        A valid JWT token is generated by the API and retourned as answer of a call
+        to the route /login giving a valid user & password.
+        The following syntax must be used in the 'Authorization' header :
+            Bearer xxxxxx.yyyyyyy.zzzzzz
+      name: Authorization
+      in: header
