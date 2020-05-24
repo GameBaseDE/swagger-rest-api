@@ -58,12 +58,20 @@ paths:
       responses:
         "200":
           description: Start successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Start failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Exception'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exception'
   /api/stop/{id}:
     get:
       tags:
@@ -82,12 +90,20 @@ paths:
       responses:
         "200":
           description: Stop successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Stop failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Exception'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exception'
   /api/restart/{id}:
     get:
       tags:
@@ -106,12 +122,20 @@ paths:
       responses:
         "200":
           description: Restart successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Restart failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Exception'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exception'
   /api/deploy:
     post:
       tags:
@@ -123,13 +147,21 @@ paths:
       responses:
         "201":
           description: Deployment successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Deployment failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Exception'
-        "400":
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exception'
+        "405":
           description: Invalid input
   /api/configure:
     post:
@@ -142,13 +174,21 @@ paths:
       responses:
         "201":
           description: Configuration successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Configuration failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Exception'
-        "400":
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exception'
+        "405":
           description: Invalid input
   /api/destroy/{id}:
     delete:
@@ -173,7 +213,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Exception'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exception'
   /api/listimages:
     get:
       tags:
@@ -194,7 +236,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Exception'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exception'
 components:
   schemas:
     Status:
@@ -240,8 +284,16 @@ components:
           description: Image used in Docker
         status:
           description: Status of container
-          oneOf:
-          - $ref: '#/components/schemas/Status'
+          type: array
+          items:
+            type: string
+            default: unknown
+            enum:
+              - running
+              - restarting
+              - stopped
+              - error
+              - unknown
         ports:
           type: array
           description: Ports used by game server
