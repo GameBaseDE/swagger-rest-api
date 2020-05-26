@@ -431,13 +431,7 @@ components:
           type: string
           description: Command with arguments that will be run upon container creation/start
         restartBehavior:
-          type: string
-          default: none
-          enum:
-          - none
-          - unless-stopped
-          - on-failure
-          - always
+          $ref: '#/components/schemas/RestartBehavior'
   requestBodies:
     UserLogin:
       content:
