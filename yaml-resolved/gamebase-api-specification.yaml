@@ -206,7 +206,7 @@ paths:
       tags:
       - gameserver
       summary: Get a list of all available game server templates
-      operationId: listImages
+      operationId: listTemplates
       responses:
         "200":
           description: Query successful
@@ -323,7 +323,7 @@ components:
       description: Dynamic details by game server monitoring agent
     GameContainerDeployment:
       required:
-      - image
+      - templatePath
       type: object
       properties:
         templatePath:
@@ -333,7 +333,7 @@ components:
     GameContainerConfiguration:
       required:
       - details
-      - resources.image
+      - resources.templatePath
       type: object
       properties:
         details:
@@ -372,9 +372,10 @@ components:
     GameContainerConfiguration_resources:
       type: object
       properties:
-        image:
+        templatePath:
           type: string
-          description: Docker image
+          description: Template path of backend directory that is going to be used
+            for game container creation
         ports:
           $ref: '#/components/schemas/GameContainerConfiguration_resources_ports'
         memory:
