@@ -6,14 +6,16 @@ info:
   contact:
     url: https://gahr.dev
     email: gamebase@gahr.dev
-  version: 1.0.0
+  version: 1.1.0
 externalDocs:
   description: Learn more about GameBase
-  url: https://gahr.dev
+  url: https://blog.game-base.de
 servers:
-- url: https://backend.dev.gahr.dev/
+- url: https://virtserver.swaggerhub.com/GameBase9/gamebase_communication_api/1.1.0
+  description: SwaggerHub API Auto Mocking
+- url: https://dev.game-base.de
   description: Dev Backend version of REST service
-- url: https://backend.gamebase.gahr.dev/
+- url: https://game-base.de
   description: Live Backend version of REST service
 tags:
 - name: api
@@ -33,15 +35,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GameServerStatusArray'
+                  $ref: '#/components/schemas/GameServerStatus'
         "404":
-          description: Container not found
+          description: Containers' status could not be fetched
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/start/{id}:
     get:
       tags:
@@ -60,20 +62,14 @@ paths:
       responses:
         "200":
           description: Start successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Start failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/stop/{id}:
     get:
       tags:
@@ -92,20 +88,14 @@ paths:
       responses:
         "200":
           description: Stop successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Stop failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/restart/{id}:
     get:
       tags:
@@ -124,20 +114,14 @@ paths:
       responses:
         "200":
           description: Restart successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Restart failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/deploy:
     post:
       tags:
@@ -149,22 +133,16 @@ paths:
       responses:
         "201":
           description: Deployment successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Deployment failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
-        "405":
+                $ref: '#/components/schemas/Exception'
+        "400":
           description: Invalid input
+      security:
+      - Bearer: []
   /api/configure:
     post:
       tags:
@@ -176,22 +154,16 @@ paths:
       responses:
         "201":
           description: Configuration successful
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GameServerStatus'
         "500":
           description: Configuration failed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
-        "405":
+                $ref: '#/components/schemas/Exception'
+        "400":
           description: Invalid input
+      security:
+      - Bearer: []
   /api/destroy/{id}:
     delete:
       tags:
@@ -215,9 +187,9 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
   /api/listimages:
     get:
       tags:
@@ -238,20 +210,78 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Exception'
+                $ref: '#/components/schemas/Exception'
+      security:
+      - Bearer: []
+  /api/auth/login:
+    post:
+      tags:
+      - api
+      summary: Login a user and return a JWT with the user object
+      requestBody:
+        $ref: '#/components/requestBodies/UserLogin'
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "403":
+          description: Login failed
+        "400":
+          description: Invalid input
 components:
   schemas:
-    GameServerStatusArray:
-      type: array
-      items:
-        $ref: '#/components/schemas/GameServerStatus'
+    Status:
+      type: string
+      default: UNKNOWN
+      enum:
+      - UNKNOWN
+      - RUNNING
+      - STOPPED
+      - RESTARTING
+      - ERROR
+    RestartBehavior:
+      type: string
+      default: none
+      enum:
+      - none
+      - unless-stopped
+      - on-failure
+      - always
+    UserLogin:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email address of the user
+        password:
+          type: string
+          description: The password of the user
+    User:
+      required:
+      - email
+      - fullName
+      - token
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email address of the user
+        fullName:
+          type: string
+          description: The full name of the user
+        token:
+          type: string
+          description: The JWT of the users session
     Exception:
       required:
       - details
       - exception
-      - id
       type: object
       properties:
         id:
@@ -269,7 +299,7 @@ components:
       - id
       - image
       - ports
-      - state
+      - status
       type: object
       properties:
         id:
@@ -278,26 +308,29 @@ components:
         gameTag:
           type: string
           description: Indentifier of game
+        ownerId:
+          type: string
+          description: ID of server owner
+          format: uuid
         image:
           type: string
           description: Image used in Docker
-        state:
-          type: array
-          items:
-            type: string
-            default: unknown
-            enum:
-            - running
-            - restarting
-            - stopped
-            - error
-            - unknown
+        description:
+          type: string
+          description: Description of server to be displayed on Dashboard
         ports:
-          type: array
-          description: Ports used by game server
-          items:
-            type: integer
-            format: int16
+          $ref: '#/components/schemas/GameServerStatus_ports'
+        memory:
+          type: integer
+          description: Amount of memory in MB to be allocated for the server
+        startupArgs:
+          type: string
+          description: Additional start up arguments that is appended or run on the
+            game server
+        restartBehavior:
+          $ref: '#/components/schemas/RestartBehavior'
+        status:
+          $ref: '#/components/schemas/Status'
         slots:
           type: integer
           description: Max. players allowed
@@ -311,6 +344,9 @@ components:
           items:
             type: string
     GameServerDeployTemplate:
+      required:
+      - image
+      - ownerId
       type: object
       properties:
         image:
@@ -321,9 +357,15 @@ components:
           description: UUID of owner whom this server belongs to
           format: uuid
     GameServerConfigurationTemplate:
-      anyOf:
-      - $ref: '#/components/schemas/GameServerStatus'
-      - type: object
+      required:
+      - details
+      - resources.image
+      type: object
+      properties:
+        details:
+          $ref: '#/components/schemas/GameServerConfigurationTemplate_details'
+        resources:
+          $ref: '#/components/schemas/GameServerConfigurationTemplate_resources'
     GameServerImages:
       type: object
       properties:
@@ -332,7 +374,72 @@ components:
           description: List of images
           items:
             type: string
+    GameServerStatus_ports:
+      type: object
+      properties:
+        tcp:
+          type: array
+          items:
+            type: integer
+            format: int16
+        udp:
+          type: array
+          items:
+            type: integer
+            format: int16
+      description: Allocated ports for server
+    GameServerConfigurationTemplate_details:
+      type: object
+      properties:
+        serverName:
+          type: string
+          description: Name of server that will displayed on one's Dashboard
+        ownerId:
+          type: string
+          description: UUID of owner whom this server belongs to
+          format: uuid
+        description:
+          type: string
+          description: Short description of server which will be displayed on one's
+            Dashboard
+      description: General details of server
+    GameServerConfigurationTemplate_resources_ports:
+      type: object
+      properties:
+        tcp:
+          type: array
+          items:
+            type: integer
+            format: int16
+        udp:
+          type: array
+          items:
+            type: integer
+            format: int16
+      description: Ports to be allocated
+    GameServerConfigurationTemplate_resources:
+      type: object
+      properties:
+        image:
+          type: string
+          description: Docker image
+        ports:
+          $ref: '#/components/schemas/GameServerConfigurationTemplate_resources_ports'
+        memory:
+          type: integer
+          description: Memory to be allocated
+          default: -1
+        startupArgs:
+          type: string
+          description: Command with arguments that will be run upon container creation/start
+        restartBehavior:
+          $ref: '#/components/schemas/RestartBehavior'
   requestBodies:
+    UserLogin:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserLogin'
     GameServerDeployTemplate:
       description: Game server template which will be used for server creation
       content:
@@ -347,3 +454,15 @@ components:
           schema:
             $ref: '#/components/schemas/GameServerConfigurationTemplate'
       required: true
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      description: |
+        For accessing the API a valid JWT token must be passed in all the queries in
+        the 'Authorization' header.
+        A valid JWT token is generated by the API and retourned as answer of a call
+        to the route /login giving a valid user & password.
+        The following syntax must be used in the 'Authorization' header :
+            Bearer xxxxxx.yyyyyyy.zzzzzz
+      name: Authorization
+      in: header
