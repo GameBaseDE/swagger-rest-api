@@ -6,27 +6,27 @@ info:
   contact:
     url: https://gahr.dev
     email: gamebase@gahr.dev
-  version: 2.0.0
+  version: 2.1.0
 externalDocs:
   description: Learn more about GameBase
   url: https://blog.game-base.de
 servers:
-- url: https://dev.game-base.de
-  description: Dev Backend version of REST service
-- url: https://game-base.de
-  description: Live Backend version of REST service
-- url: https://virtserver.swaggerhub.com/GameBase9/gamebase_communication_api/2.0.0
-  description: SwaggerHub API Auto Mocking
+  - url: https://dev.game-base.de
+    description: Dev Backend version of REST service
+  - url: https://game-base.de
+    description: Live Backend version of REST service
+  - url: https://virtserver.swaggerhub.com/GameBase9/gamebase_communication_api/2.1.0
+    description: SwaggerHub API Auto Mocking
 tags:
-- name: gameserver
-  description: Game server and container management endpoints
-- name: auth
-  description: Authentication endpoints
+  - name: gameserver
+    description: Game server and container management endpoints
+  - name: auth
+    description: Authentication endpoints
 paths:
   /gs/status:
     get:
       tags:
-      - gameserver
+        - gameserver
       summary: Query status of all deployments
       operationId: getStatus
       responses:
@@ -45,22 +45,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Exception'
       security:
-      - Bearer: []
+        - Bearer: []
   /gs/start/{id}:
     get:
       tags:
-      - gameserver
+        - gameserver
       summary: Start a game server/container
       operationId: startContainer
       parameters:
-      - name: id
-        in: path
-        description: ID of game server to start
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: ID of game server to start
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: Start successful
@@ -71,22 +71,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Exception'
       security:
-      - Bearer: []
+        - Bearer: []
   /gs/stop/{id}:
     get:
       tags:
-      - gameserver
+        - gameserver
       summary: Stop a game server/container
       operationId: stopContainer
       parameters:
-      - name: id
-        in: path
-        description: ID of game server to stop
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: ID of game server to stop
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: Stop successful
@@ -97,22 +97,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Exception'
       security:
-      - Bearer: []
+        - Bearer: []
   /gs/restart/{id}:
     get:
       tags:
-      - gameserver
+        - gameserver
       summary: Restart a game server/container
       operationId: restartContainer
       parameters:
-      - name: id
-        in: path
-        description: ID of game server to restart
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: ID of game server to restart
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: Restart successful
@@ -123,11 +123,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Exception'
       security:
-      - Bearer: []
+        - Bearer: []
   /gs/deploy:
     post:
       tags:
-      - gameserver
+        - gameserver
       summary: Deploy a game server based on POST body
       operationId: deployContainer
       requestBody:
@@ -135,61 +135,61 @@ paths:
       responses:
         "201":
           description: Deployment successful
+        "400":
+          description: Invalid input
         "500":
           description: Deployment failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-        "400":
-          description: Invalid input
       security:
-      - Bearer: []
+        - Bearer: []
   /gs/configure/{id}:
     post:
       tags:
-      - gameserver
+        - gameserver
       summary: Configure a game server based on POST body
       operationId: configureContainer
       parameters:
-      - name: id
-        in: path
-        description: ID of game server to configure
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: ID of game server to configure
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       requestBody:
         $ref: '#/components/requestBodies/GameContainerConfiguration'
       responses:
         "201":
           description: Configuration successful
+        "400":
+          description: Invalid input
         "500":
           description: Configuration failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-        "400":
-          description: Invalid input
       security:
-      - Bearer: []
+        - Bearer: []
   /gs/destroy/{id}:
     delete:
       tags:
-      - gameserver
+        - gameserver
       summary: Delete deployment of game server
       operationId: deleteContainer
       parameters:
-      - name: id
-        in: path
-        description: ID of game server to delete
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: ID of game server to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: Deletion successful
@@ -200,11 +200,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Exception'
       security:
-      - Bearer: []
+        - Bearer: []
   /gs/templates:
     get:
       tags:
-      - gameserver
+        - gameserver
       summary: Get a list of all available game server templates
       operationId: listTemplates
       responses:
@@ -223,11 +223,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Exception'
       security:
-      - Bearer: []
+        - Bearer: []
   /auth/login:
     post:
       tags:
-      - auth
+        - auth
       summary: Login a user and return a JWT with the user object
       requestBody:
         $ref: '#/components/requestBodies/UserLogin'
@@ -238,33 +238,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        "403":
-          description: Login failed
         "400":
           description: Invalid input
+        "403":
+          description: Login failed
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register a user and return a JWT with the user object
+      requestBody:
+        $ref: '#/components/requestBodies/UserRegister'
+      responses:
+        "200":
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Invalid input
+        "403":
+          description: Registration failed
+  /auth/logout:
+    delete:
+      tags:
+        - auth
+      summary: Invalidate the passed JWT
+      responses:
+        "200":
+          description: Logout successful
+        "400":
+          description: Invalid input
+      security:
+        - Bearer: []
 components:
   schemas:
     Status:
       type: string
       default: UNKNOWN
       enum:
-      - UNKNOWN
-      - RUNNING
-      - STOPPED
-      - RESTARTING
-      - ERROR
+        - UNKNOWN
+        - RUNNING
+        - STOPPED
+        - RESTARTING
+        - ERROR
     RestartBehavior:
       type: string
       default: none
       enum:
-      - none
-      - unless-stopped
-      - on-failure
-      - always
+        - none
+        - unless-stopped
+        - on-failure
+        - always
     UserLogin:
       required:
-      - email
-      - password
+        - email
+        - password
       type: object
       properties:
         email:
@@ -273,11 +303,30 @@ components:
         password:
           type: string
           description: The password of the user
+    UserRegister:
+      required:
+        - confirmPassword
+        - email
+        - password
+      type: object
+      properties:
+        fullName:
+          type: string
+          description: Full name of the user
+        email:
+          type: string
+          description: Email address of the user
+        password:
+          type: string
+          description: The password of the user
+        confirmPassword:
+          type: string
+          description: The password confirmation of the user (must be equal to password)
     User:
       required:
-      - email
-      - fullName
-      - token
+        - email
+        - fullName
+        - token
       type: object
       properties:
         email:
@@ -291,8 +340,8 @@ components:
           description: The JWT of the users session
     Exception:
       required:
-      - details
-      - exception
+        - details
+        - exception
       type: object
       properties:
         id:
@@ -323,7 +372,7 @@ components:
       description: Dynamic details by game server monitoring agent
     GameContainerDeployment:
       required:
-      - templatePath
+        - templatePath
       type: object
       properties:
         templatePath:
@@ -332,8 +381,8 @@ components:
             for game container creation
     GameContainerConfiguration:
       required:
-      - details
-      - resources.templatePath
+        - details
+        - resources.templatePath
       type: object
       properties:
         details:
@@ -398,6 +447,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UserLogin'
+    UserRegister:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserRegister'
     GameContainerDeployment:
       description: Game server template which will be used for server creation
       content:
