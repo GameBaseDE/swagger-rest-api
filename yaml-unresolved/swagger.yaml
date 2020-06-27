@@ -22,6 +22,8 @@ tags:
     description: Game server and container management endpoints
   - name: auth
     description: Authentication endpoints
+  - name: user
+    description: User management endpoints
 paths:
   /gs/status:
     get:
@@ -284,6 +286,28 @@ paths:
         '400':
           description: Invalid input
 
+  /user/update:
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - user
+      summary: Update fields of a user's profile
+      operationId: updateUserProfile
+      responses:
+        '200':
+          description: Successful operation
+
+        '404':
+          description: User's profile could not be updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+
+      requestBody:
+        $ref: '#/components/requestBodies/UserProfile'
+
 components:
   securitySchemes:
     Bearer:
@@ -362,6 +386,27 @@ components:
         token:
           type: string
           description: The JWT of the users session
+    UserProfile:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        email:
+          type: string
+          description: E-mail address of the user
+        password:
+          type: object
+          properties:
+            old:
+              type: string
+              description: Old password of the user as a confirmation step
+            new:
+              type: string
+              description: New desired password of the user
+        gravatar:
+          type: string
+          description: E-mail address of the Gravatar to be used
     Exception:
       type: object
       required:
@@ -462,6 +507,11 @@ components:
                 type: string
 
   requestBodies:
+    UserProfile:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserProfile'
     UserLogin:
       content:
         application/json:
