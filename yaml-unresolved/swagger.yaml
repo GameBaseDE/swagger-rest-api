@@ -51,7 +51,7 @@ paths:
                 $ref: '#/components/schemas/Exception'
 
   '/gs/start/{id}':
-    get:
+    post:
       security:
         - Bearer: []
       tags:
@@ -77,7 +77,7 @@ paths:
                 $ref: '#/components/schemas/Exception'
 
   '/gs/stop/{id}':
-    get:
+    post:
       security:
         - Bearer: []
       tags:
@@ -103,7 +103,7 @@ paths:
                 $ref: '#/components/schemas/Exception'
 
   '/gs/restart/{id}':
-    get:
+    post:
       security:
         - Bearer: []
       tags:
