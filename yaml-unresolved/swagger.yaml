@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the REST API used as an communication layer between backend and frontend.
-  version: "2.2.0"
+  version: "2.3.0"
   title: GameBase Communication API
   contact:
     email: gamebase@gahr.dev
@@ -51,7 +51,7 @@ paths:
                 $ref: '#/components/schemas/Exception'
 
   '/gs/start/{id}':
-    get:
+    post:
       security:
         - Bearer: []
       tags:
@@ -77,7 +77,7 @@ paths:
                 $ref: '#/components/schemas/Exception'
 
   '/gs/stop/{id}':
-    get:
+    post:
       security:
         - Bearer: []
       tags:
@@ -103,7 +103,7 @@ paths:
                 $ref: '#/components/schemas/Exception'
 
   '/gs/restart/{id}':
-    get:
+    post:
       security:
         - Bearer: []
       tags:
@@ -326,9 +326,9 @@ components:
       type: string
       enum:
         - UNKNOWN
+        - STARTING
         - RUNNING
         - STOPPED
-        - RESTARTING
         - ERROR
       default: UNKNOWN
     RestartBehavior:
@@ -422,6 +422,29 @@ components:
         details:
           type: string
           description: Detailed message of issue
+    Protocol:
+      type: string
+      enum:
+        - TCP
+        - UDP
+      default: TCP
+    PortMapping:
+      type: object
+      required:
+        - protocol
+        - nodePort
+        - containerPort
+      properties:
+        protocol:
+          $ref: '#/components/schemas/Protocol'
+        nodePort:
+          type: integer
+          format: int16
+          description: Externally exposed Port Number
+        containerPort:
+          type: integer
+          format: int16
+          description: Internal Port Number routed to Container
 
     GameContainerStatus:
       type: object
@@ -464,10 +487,6 @@ components:
             serverName:
               type: string
               description: Name of server that will displayed on one's Dashboard
-            ownerId:
-              type: string
-              format: uuid
-              description: UUID of owner whom this server belongs to
             description:
               type: string
               description: Short description of server which will be displayed on one's Dashboard
@@ -478,19 +497,10 @@ components:
               type: string
               description: Template path of backend directory that is going to be used for game container creation
             ports:
-              type: object
-              description: Ports to be allocated
-              properties:
-                tcp:
-                  type: array
-                  items:
-                    type: integer
-                    format: int16
-                udp:
-                  type: array
-                  items:
-                    type: integer
-                    format: int16
+              type: array
+              description: PortMappings for the Container
+              items:
+                $ref: '#/components/schemas/PortMapping'
             memory:
               type: integer
               description: Memory to be allocated
