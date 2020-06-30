@@ -464,10 +464,6 @@ components:
             serverName:
               type: string
               description: Name of server that will displayed on one's Dashboard
-            ownerId:
-              type: string
-              format: uuid
-              description: UUID of owner whom this server belongs to
             description:
               type: string
               description: Short description of server which will be displayed on one's Dashboard
