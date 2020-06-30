@@ -326,9 +326,9 @@ components:
       type: string
       enum:
         - UNKNOWN
+        - STARTING
         - RUNNING
         - STOPPED
-        - RESTARTING
         - ERROR
       default: UNKNOWN
     RestartBehavior:
